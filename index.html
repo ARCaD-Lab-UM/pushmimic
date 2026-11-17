@@ -25,6 +25,7 @@
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script defer src="./static/js/single-push.js"></script>
   <script src="./static/js/augment.js"></script>
   <script type="importmap">
     {
@@ -432,7 +433,46 @@
       </div>
     </div>
 
-    <!-- One video per row, two thirds of the text width. -->
+  </div>
+
+  <div class="container is-max-widescreen single-push" id="single-push">
+    <h3 class="title is-4 has-text-centered" id="single-push-title">Single Push Across Ramp Angles</h3>
+    <div class="single-push-scroll" tabindex="0" role="region" aria-labelledby="single-push-title">
+      <div class="single-push-comparison">
+        <div class="single-push-row single-push-angles">
+          <span>0&deg;</span>
+          <span>5&deg;</span>
+          <span>10&deg;</span>
+          <span>12&deg;</span>
+        </div>
+        <h4 class="single-push-camera">Camera 1</h4>
+        <div class="single-push-row">
+          <video controls loop muted playsinline preload="metadata" width="1280" height="720" aria-label="Camera 1, level ground"
+                 src="./static/videos/single-push/0deg-cam1.mp4" poster="./static/videos/single-push/0deg-cam1.jpg"></video>
+          <video controls loop muted playsinline preload="metadata" width="1280" height="720" aria-label="Camera 1, 5 degree ramp"
+                 src="./static/videos/single-push/5deg-cam1.mp4" poster="./static/videos/single-push/5deg-cam1.jpg"></video>
+          <video controls loop muted playsinline preload="metadata" width="1280" height="720" aria-label="Camera 1, 10 degree ramp"
+                 src="./static/videos/single-push/10deg-cam1.mp4" poster="./static/videos/single-push/10deg-cam1.jpg"></video>
+          <video controls loop muted playsinline preload="metadata" width="1280" height="720" aria-label="Camera 1, 12 degree ramp"
+                 src="./static/videos/single-push/12deg-cam1.mp4" poster="./static/videos/single-push/12deg-cam1.jpg"></video>
+        </div>
+        <h4 class="single-push-camera">Camera 2</h4>
+        <div class="single-push-row">
+          <video controls loop muted playsinline preload="metadata" width="1280" height="720" aria-label="Camera 2, level ground"
+                 src="./static/videos/single-push/0deg-cam2.mp4" poster="./static/videos/single-push/0deg-cam2.jpg"></video>
+          <video controls loop muted playsinline preload="metadata" width="1280" height="720" aria-label="Camera 2, 5 degree ramp"
+                 src="./static/videos/single-push/5deg-cam2.mp4" poster="./static/videos/single-push/5deg-cam2.jpg"></video>
+          <video controls loop muted playsinline preload="metadata" width="1280" height="720" aria-label="Camera 2, 10 degree ramp"
+                 src="./static/videos/single-push/10deg-cam2.mp4" poster="./static/videos/single-push/10deg-cam2.jpg"></video>
+          <video controls loop muted playsinline preload="metadata" width="1280" height="720" aria-label="Camera 2, 12 degree ramp"
+                 src="./static/videos/single-push/12deg-cam2.mp4" poster="./static/videos/single-push/12deg-cam2.jpg"></video>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container is-max-desktop">
+    <h3 class="title is-4 has-text-centered">Additional Hardware Clips</h3>
     <div class="columns is-centered is-multiline">
       <div class="column is-two-thirds">
         <div class="video-frame">
