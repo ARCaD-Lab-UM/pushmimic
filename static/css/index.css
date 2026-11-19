@@ -1,0 +1,850 @@
+body {
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.section {
+  padding: 2rem 1.5rem;
+}
+
+.publication-title,
+.publication-authors {
+  font-family: 'Google Sans', sans-serif;
+}
+
+/* On desktop the title keeps two lines, the second starting at "Dynamic". The hero container is
+   960 px wide below 1216 px and 1152 px above, and each font size fits the longer line in it. */
+.publication-title .title-break {
+  display: none;
+}
+
+@media screen and (min-width: 1024px) {
+  .publication-title {
+    font-size: 2.25rem !important;
+  }
+
+  .publication-title .title-break {
+    display: inline;
+  }
+}
+
+@media screen and (min-width: 1216px) {
+  .publication-title {
+    font-size: 2.7rem !important;
+  }
+}
+
+.publication-authors a {
+  color: hsl(204, 86%, 53%) !important;
+}
+
+.publication-authors a:hover {
+  text-decoration: underline;
+}
+
+.author-block {
+  display: inline-block;
+}
+
+.link-block a,
+.link-block span.button {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.org-logos {
+  margin-top: 1.5rem;
+  gap: 2.5rem;
+}
+
+.org-logos .column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.org-logo {
+  height: 55px;
+  width: auto;
+  object-fit: contain;
+}
+
+.org-logo.arcad-logo {
+  height: 85px;
+}
+
+/* Videos and figures */
+
+/* The same width as the text column (Bulma's is-max-desktop container). */
+.single-push,
+.clip-section {
+  max-width: 960px;
+  margin: 2rem auto 3rem;
+}
+
+.single-push .title {
+  margin-bottom: 0.4rem;
+}
+
+.clip-title {
+  margin: 0.25rem 0 0.3rem;
+  color: #4a4a4a;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.ramp-angles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.2rem;
+  width: min(100%, 22rem);
+  margin: 0 auto 0.5rem;
+  padding: 0.2rem;
+  border: 1px solid #dbe3eb;
+  border-radius: 999px;
+  background: #f2f5f8;
+}
+
+.ramp-angles .button {
+  height: 2rem;
+  padding: 0 0.3rem;
+  border-color: transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: #00274c;
+  font-variant-numeric: tabular-nums;
+}
+
+.ramp-angles .button:hover {
+  background: #e2eaf1;
+}
+
+.ramp-angles .button:focus-visible {
+  outline: 2px solid #2974b3;
+  outline-offset: 1px;
+}
+
+.ramp-angles .button[aria-pressed="true"] {
+  border-color: #00274c;
+  background: #00274c;
+  color: #fff;
+}
+
+/* Two panels per row. Ramp views are 16:9. Torso pitch and continuous push clips are cropped to 4:3
+   around the robot and the box. */
+.ramp-views,
+.clip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.clip-grid {
+  row-gap: 1.25rem;
+}
+
+@media (max-width: 600px) {
+  .ramp-views,
+  .clip-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ramp-stage {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  background: #000;
+}
+
+.ramp-stage video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.ramp-stage video.is-active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.ramp-stage video.is-incoming {
+  z-index: 2;
+}
+
+.ramp-compare-status:not(:empty) {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #4a4a4a;
+}
+
+.clip-section .title {
+  margin-bottom: 0.65rem;
+}
+
+.pitch-comparison {
+  --torso-axis: #e6d652;
+  --ramp-normal: #141416;
+}
+
+.pitch-legend {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  color: #4a4a4a;
+  font-size: 0.85rem;
+}
+
+.pitch-legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.85rem;
+  margin-right: 0.3rem;
+  border-top: 2px solid var(--torso-axis);
+  vertical-align: middle;
+}
+
+.pitch-legend .pitch-normal::before {
+  border-top: 2px dashed var(--ramp-normal);
+}
+
+.pitch-video,
+.clip-grid video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background: #000;
+}
+
+.clip-grid video {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.push-player {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* One bar along the bottom of every clip: box mass and ramp angle on the left, playback on the right. */
+.hud {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 2.4rem 0.8rem 0.55rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.4) 55%, rgba(0, 0, 0, 0));
+  color: #fff;
+  pointer-events: none;
+}
+
+.hud-group {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.1rem;
+}
+
+.hud-field {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.hud-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.hud-value {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Both symbols are 0.95em tall, so the fast forward triangles match the play triangle. */
+.hud-value svg {
+  width: 0.95em;
+  height: 0.95em;
+  fill: currentColor;
+}
+
+.hud-value svg.icon-fast {
+  width: 1.1875em;
+}
+
+/* Every field keeps room for a track, so the values share a baseline. */
+.hud-track {
+  display: block;
+  height: 3px;
+  margin-top: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.28);
+  visibility: hidden;
+}
+
+.hud-track i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: #ffcb05;
+}
+
+/* The quantity that changes during the clip */
+.hud-field.is-varying {
+  min-width: 4.8rem;
+}
+
+.is-varying .hud-label {
+  color: #ffcb05;
+  opacity: 1;
+}
+
+.is-varying .hud-value {
+  font-size: 1.4rem;
+  color: #ffcb05;
+}
+
+.is-varying .hud-track {
+  visibility: visible;
+}
+
+.figure {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.figure img.is-rounded {
+  border-radius: 10px;
+}
+
+.figure img.is-narrow {
+  max-width: 560px;
+}
+
+.figure-caption {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  color: #4a4a4a;
+  text-align: center;
+}
+
+.subsection-title {
+  font-family: 'Google Sans', sans-serif;
+  margin-top: 1.5rem;
+}
+
+/* Sliders */
+
+.explorer-control {
+  margin-bottom: 1rem;
+}
+
+.explorer-control label {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.explorer-control .value {
+  font-family: 'Google Sans', sans-serif;
+  color: #00274c;
+}
+
+.explorer-control input[type=range] {
+  width: 100%;
+  accent-color: #00274c;
+  cursor: pointer;
+}
+
+/* Each label is a zero-width box centered on its value, and the padding matches the thumb radius,
+   since the thumb center runs from one radius inside the track to one radius short of its end. */
+.explorer-ticks {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 var(--thumb-radius, 8px);
+  font-size: 0.75rem;
+  color: #7a7a7a;
+}
+
+.explorer-ticks span {
+  display: flex;
+  justify-content: center;
+  width: 0;
+  white-space: nowrap;
+}
+
+/* Dynamic motion augmentation figure */
+
+.aug-figure {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  background: #f6f8fb;
+}
+
+.aug-figure-wrap {
+  position: relative;
+}
+
+/* Same chip as the demo's view hint, in the bottom right corner on the ramp */
+.aug-hint {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  color: #4a4a4a;
+  background: rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+}
+
+.aug-label {
+  font-family: 'Google Sans', sans-serif;
+  font-size: 32px;
+  font-weight: 600;
+  fill: #363636;
+  paint-order: stroke;
+  stroke: #f6f8fb;
+  stroke-width: 6px;
+  stroke-linejoin: round;
+}
+
+.aug-legend {
+  margin: 0.25rem 0 0.75rem 0;
+}
+
+.aug-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.aug-swatch {
+  width: 1.4rem;
+  height: 0.8rem;
+  border-radius: 4px;
+  border: 1.5px solid #4a4a4a;
+}
+
+.aug-swatch.is-nominal {
+  background: rgba(61, 139, 253, 0.45);
+  border-color: #1f5fbf;
+}
+
+.aug-swatch.is-augmented {
+  background: #e3e5e8;
+}
+
+.aug-card {
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.aug-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.aug-card-title {
+  margin: 0;
+  font-family: 'Google Sans', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #363636;
+}
+
+.aug-card-more {
+  margin-top: 0.75rem;
+}
+
+.aug-card-more img {
+  display: block;
+  width: 100%;
+}
+
+.aug-card-more p {
+  margin-bottom: 0.5rem;
+}
+
+.aug-symbols {
+  font-size: 0.9rem;
+  color: #4a4a4a;
+}
+
+.aug-card-toggle {
+  flex: none;
+  padding: 0.25rem 0;
+  border: 0;
+  background: none;
+  font-family: 'Google Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #00274c;
+  cursor: pointer;
+}
+
+.aug-card-toggle::after {
+  content: '';
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  margin: 0 0 0.2rem 0.5rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.aug-card-toggle[aria-expanded="true"]::after {
+  margin-bottom: -0.05rem;
+  transform: rotate(-135deg);
+}
+
+/* Results table */
+
+.results-table {
+  margin: 1rem auto 0.5rem auto;
+}
+
+.results-table th,
+.results-table td {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.results-table th:first-child,
+.results-table td:first-child {
+  text-align: left !important;
+}
+
+.table-container {
+  margin-bottom: 0.5rem !important;
+}
+
+/* Keep wide display equations from widening the page on small screens */
+mjx-container[display="true"] {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Interactive demo */
+
+.demo-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #e9eef4;
+}
+
+/* Absolutely positioned so the drawing buffer size never feeds back into the layout. */
+.demo-viewport canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: none;
+}
+
+.demo-status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  text-align: center;
+  color: #4a4a4a;
+  background: rgba(233, 238, 244, 0.9);
+}
+
+.demo-panel .explorer-control {
+  margin-bottom: 0.75rem;
+}
+
+.demo-chart {
+  display: block;
+  width: 100%;
+  height: 90px;
+  border-radius: 8px;
+  background: #fafbfc;
+}
+
+.demo-buttons {
+  margin-top: 0.75rem;
+}
+
+/* YouTube embed */
+
+.video-embed {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #000;
+}
+
+.video-embed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Wrap long BibTeX lines instead of scrolling sideways */
+#BibTeX pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* RDMT figure: videos under an SVG overlay, both on one 1100 x 540 grid */
+
+.rdmt-scroll {
+  overflow-x: auto;
+}
+
+.rdmt-figure {
+  position: relative;
+  width: 100%;
+  min-width: 720px;
+  aspect-ratio: 1100 / 540;
+}
+
+/* Where the page margin has room, the panels (x = 49 to 1086 on the grid) line up with the text
+   column and the slope axis hangs into the left margin. */
+@media screen and (min-width: 1088px) {
+  .rdmt-scroll {
+    overflow: visible;
+  }
+
+  .rdmt-figure {
+    width: calc(100% * 1100 / 1037);
+    margin-left: calc(-100% * 49 / 1037);
+  }
+}
+
+.rdmt-video {
+  position: absolute;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.rdmt-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  font-family: 'Times New Roman', Times, 'Liberation Serif', serif;
+}
+
+.rdmt-frame {
+  fill: none;
+  stroke: #9dc3e6;
+  stroke-width: 2.2;
+  stroke-dasharray: 8 5;
+}
+
+.rdmt-title {
+  font-size: 21px;
+  fill: #222;
+  text-anchor: middle;
+}
+
+.rdmt-label {
+  font-size: 19px;
+  font-weight: 700;
+  fill: #222;
+  text-anchor: middle;
+}
+
+.rdmt-arrow {
+  fill: none;
+  stroke-width: 4.5;
+}
+
+.rdmt-arrow.blue {
+  stroke: #5b8fd6;
+}
+
+.rdmt-arrow.orange {
+  stroke: #f0a46c;
+}
+
+.rdmt-arrow.gray {
+  stroke: #9a9a9a;
+}
+
+.rdmt-axis {
+  fill: none;
+  stroke: #e8b400;
+  stroke-width: 3.5;
+}
+
+.rdmt-axis-label {
+  font-size: 18px;
+  font-weight: 700;
+  fill: #e8b400;
+  text-anchor: middle;
+}
+
+.rdmt-net {
+  fill: url(#rdmt-net-fill);
+  stroke: #5b8fd6;
+  stroke-width: 2.5;
+}
+
+.rdmt-edges path {
+  fill: none;
+  stroke: #a9bdd6;
+  stroke-width: 1.3;
+}
+
+.rdmt-node-in circle {
+  fill: #5b8fd6;
+  stroke: #fff;
+  stroke-width: 1.5;
+}
+
+.rdmt-node-hidden circle {
+  fill: #fff;
+  stroke: #5b8fd6;
+  stroke-width: 2;
+}
+
+.rdmt-node-out circle {
+  fill: #f0a46c;
+  stroke: #fff;
+  stroke-width: 1.5;
+}
+
+/* Channel contents, small pills next to the arrows */
+
+.rdmt-chip text {
+  text-anchor: middle;
+}
+
+.rdmt-chip rect {
+  stroke-width: 1.2;
+}
+
+.rdmt-chip.blue rect {
+  fill: #eef4fd;
+  stroke: #b7cff2;
+}
+
+.rdmt-chip.blue text {
+  fill: #2b4f80;
+}
+
+.rdmt-chip.orange rect {
+  fill: #fdf1e8;
+  stroke: #f5c9a8;
+}
+
+.rdmt-chip.orange text {
+  fill: #8a4b1f;
+}
+
+.rdmt-chip.gray rect {
+  fill: #f3f3f3;
+  stroke: #d2d2d2;
+}
+
+.rdmt-chip.gray text {
+  fill: #555;
+}
+
+
+/* One-line summary under the video */
+
+.punchline {
+  margin-top: 0;
+  font-family: 'Google Sans', sans-serif;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: #363636;
+}
+
+/* Reader prompt and view hint of the demo */
+
+.demo-prompt {
+  padding: 0.75rem 1rem;
+  border-left: 4px solid #e8663d;
+  border-radius: 4px;
+  background: #fdf3ee;
+}
+
+.demo-hint {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  z-index: 2;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  color: #4a4a4a;
+  background: rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+}
+
+/* Presets sit side by side and share the panel width */
+.demo-presets {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.demo-presets .demo-preset {
+  flex: 1 1 0;
+  margin: 0 !important;
+  border: 2px solid #00274c;
+  color: #00274c;
+  font-weight: 600;
+}
+
+.demo-presets .demo-preset:hover {
+  border-color: #00274c;
+  background: #00274c;
+  color: #fff;
+}

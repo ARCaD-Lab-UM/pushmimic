@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="PushMimic: Learning Adaptive Humanoid Box Pushing via Dynamic Motion Augmentation and Reference Distillation">
+  <meta name="keywords" content="Humanoid Robot, Loco-Manipulation, Box Pushing, Motion Tracking, Reinforcement Learning, Trajectory Optimization">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="PushMimic">
+  <meta property="og:description" content="Learning Adaptive Humanoid Box Pushing via Dynamic Motion Augmentation and Reference Distillation">
+  <meta property="og:image" content="./static/images/overview.png">
+  <title>PushMimic</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/logos/favicon.svg">
+
+  <script>
+    window.MathJax = { tex: { inlineMath: [['\\(', '\\)']] } };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+  <script defer src="./static/js/vendor/fontawesome.all.min.js"></script>
+  <script defer src="./static/js/single-push.js"></script>
+  <script defer src="./static/js/continuous-push.js"></script>
+  <script defer src="./static/js/torso-pitch.js"></script>
+  <script src="./static/js/augment.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="./static/js/demo/demo.js"></script>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-widescreen">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">PushMimic: Learning Adaptive Humanoid Box Pushing via<br class="title-break"> Dynamic Motion Augmentation and Reference Distillation</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://silvery107.github.io/" target="_blank" rel="noopener noreferrer">Yulun Zhuang</a>,</span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/hanyu-zhang-33878b351/" target="_blank" rel="noopener noreferrer">Hanyu Zhang</a>,</span>
+            <span class="author-block">
+              <a href="https://juliusl-code.github.io/" target="_blank" rel="noopener noreferrer">Jingyu Liu</a>,</span>
+            <span class="author-block">
+              <a href="https://sites.google.com/view/yanranding/" target="_blank" rel="noopener noreferrer">Yanran Ding</a>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">University of Michigan</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- Video Link. -->
+              <span class="link-block">
+                <a href="https://youtu.be/pdW_6NgSCAU"
+                   class="external-link button is-normal is-rounded is-dark" target="_blank" rel="noopener noreferrer">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/ARCaD-Lab-UM/pushmimic"
+                   class="external-link button is-normal is-rounded is-dark" target="_blank" rel="noopener noreferrer">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                </a>
+              </span>
+              <!-- arXiv Link. Disabled until the paper is on arXiv. -->
+              <span class="link-block">
+                <span class="button is-normal is-rounded is-dark" disabled>
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </span>
+              </span>
+              <!-- PDF Link. Disabled until the paper is released. -->
+              <span class="link-block">
+                <span class="button is-normal is-rounded is-dark" disabled>
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="columns is-centered is-vcentered org-logos">
+            <div class="column is-narrow has-text-centered">
+              <img src="./static/images/logos/um-robotics.svg" alt="University of Michigan Robotics" class="org-logo">
+            </div>
+            <div class="column is-narrow has-text-centered">
+              <a href="https://sites.google.com/umich.edu/arcad-lab/" target="_blank" rel="noopener noreferrer">
+                <img src="./static/images/logos/arcad-wide.png" alt="ARCaD Lab" class="org-logo arcad-logo">
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="video">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <div class="video-embed">
+          <iframe src="https://www.youtube.com/embed/pdW_6NgSCAU?rel=0&amp;playsinline=1&amp;loop=1&amp;playlist=pdW_6NgSCAU"
+                  title="PushMimic video" frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+    <!-- Full container width, so that the punchline fits on two lines on desktop. -->
+    <p class="punchline has-text-centered">
+      <b>PushMimic</b> enables a humanoid to push boxes of unknown mass up ramps of unknown inclination,
+      adapting an effort-saving posture on the fly, all learned from a single human demonstration.
+    </p>
+  </div>
+</section>
+
+
+<!--
+  Abstract of the paper, kept for reference. Its sentences are reused across the page.
+
+  Adaptive humanoid box pushing over a ramp is challenging since the box mass and the ramp inclination are
+  often unknown before the push begins, so the robot needs to adapt on the fly. This paper presents
+  PushMimic, a framework that augments a single nominal reference motion, where a human pushes a box on
+  level ground, into a dynamically feasible augmented motion dataset over a grid of box masses and ramp
+  inclinations via sampling-based trajectory optimization. This augmented dataset is distilled into a motion
+  tracking policy in one stage of training. The trained policy can adapt pushing posture naturally without
+  explicit knowledge of the box mass and ramp inclination. Simulation results demonstrate a success rate of
+  93.0% over box masses up to 15 kg and ramp inclinations up to 18 degrees. Compared with the vanilla domain
+  randomization baseline, PushMimic achieves 25% less thermal loss. Hardware experiments show that the
+  policy transfers to the physical Unitree G1 and pushes a 6 kg, 1 m tall box.
+-->
+
+
+<section class="section" id="demo">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Imagine You Are Pushing a Heavy Box Up a Loading Ramp</h2>
+    <div class="content has-text-justified">
+      <p>
+        Which pose would you choose, and how would that change if the box were heavier or the ramp were steeper than expected?
+      </p>
+      <p class="demo-prompt">
+        <b>Try it.</b> The robot below runs live in your browser.
+        Switch between the two presets, or move the sliders yourself. Watch how its posture changes relative to ramp inclinations and box masses.
+      </p>
+    </div>
+
+    <div class="columns demo-layout">
+      <div class="column is-8">
+        <div class="demo-viewport" id="demo-canvas">
+          <div class="demo-status" id="demo-status">The demo loads when you scroll here.</div>
+          <div class="demo-hint">Drag to rotate, scroll to zoom</div>
+        </div>
+      </div>
+      <div class="column is-4 demo-panel">
+        <div class="buttons demo-presets">
+          <button class="button is-small is-rounded demo-preset" data-mass="7" data-slope="2">Flat &amp; Light</button>
+          <button class="button is-small is-rounded demo-preset" data-mass="13" data-slope="12">Steep &amp; Heavy</button>
+        </div>
+        <div class="explorer-control">
+          <label for="demo-slope">Ramp inclination <span class="value" id="demo-slope-value">8&deg;</span></label>
+          <input type="range" id="demo-slope" min="0" max="15" step="1" value="8" autocomplete="off">
+          <div class="explorer-ticks"><span>0</span><span>3</span><span>6</span><span>9</span><span>12</span><span>15</span></div>
+        </div>
+        <div class="explorer-control">
+          <label for="demo-mass">Box mass <span class="value" id="demo-mass-value">10 kg</span></label>
+          <input type="range" id="demo-mass" min="5" max="15" step="1" value="10" autocomplete="off">
+          <div class="explorer-ticks"><span>5</span><span>7</span><span>9</span><span>11</span><span>13</span><span>15</span></div>
+        </div>
+        <canvas class="demo-chart" id="demo-chart"></canvas>
+        <div class="buttons demo-buttons">
+          <button class="button is-small is-rounded is-dark" id="demo-pause">
+            <span class="icon"><i class="fas fa-pause"></i></span><span>Pause</span>
+          </button>
+          <button class="button is-small is-rounded" id="demo-reset">
+            <span class="icon"><i class="fas fa-redo"></i></span><span>Reset</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Different Postures, One Policy</h2>
+    <div class="content has-text-justified">
+      <p>
+        With steeper ramps and heavier boxes, the robot pitches its torso further forward and places its feet further back, leaning its weight towards the box instead of pushing harder with its arms.
+        All postures come from one policy that observes only a single level-ground human reference and adapts to different box masses and ramp inclinations online.
+        <!-- It infers both from how the box responds to its push and adapts its posture online. -->
+      </p>
+      <p>
+        Over box masses up to 15 kg and ramps up to 18&deg;, PushMimic <b>succeeds in 93.0%</b> of the pushes in simulation.
+        Leaning instead of pushing harder results in <b>25% less thermal loss</b> and 14% lower arm torque.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">How It Works</h2>
+        <div class="figure">
+          <img src="./static/images/overview.png" alt="Overview of PushMimic">
+        </div>
+        <div class="content has-text-justified">
+          <p>
+            PushMimic starts from a single reference motion of a human pushing a box on level ground.
+            <b>Dynamic motion augmentation</b> turns it into dynamically feasible references over a grid of box masses and ramp inclinations.
+            <b>Reference distilled motion tracking</b> then distills all of them into one motion tracking policy in a single stage of training. At <b>deployment</b>, the policy adapts its posture without knowing the box mass or the ramp inclination.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Dynamic Motion Augmentation</h2>
+    <div class="content has-text-justified">
+      <p>
+        The human reference only shows how to push on level ground.
+        Sampling-based trajectory optimization (SBTO) adapts it to box masses from 5 to 15 kg and ramp inclinations from 0&deg; to 18&deg;, producing 209 dynamically feasible references.
+        Two cost terms guide the posture change while the rest of the motion stays close to the reference.
+        <!-- The <b>torso pitch prior</b> asks the torso to pitch further forward as the box gets heavier or the ramp steeper, and the <b>foot placement dead zone</b> leaves the feet free to step back within a band around the reference footprint. -->
+      </p>
+    </div>
+
+    <div class="aug-card">
+      <div class="aug-card-head">
+        <h3 class="aug-card-title">Cost Design: Torso Pitch Prior &amp; Foot Placement Dead Zone</h3>
+        <button class="aug-card-toggle" type="button" aria-expanded="false"><span>Show more</span></button>
+      </div>
+      <div class="aug-card-more" hidden>
+        <div class="columns is-vcentered">
+          <div class="column is-5">
+            <img src="./static/images/simplified-model.png" alt="Simplified planar quasi-static model">
+          </div>
+          <div class="column is-7">
+            <p>Balancing the moments about the center of pressure (CoP) of the feet in a planar quasi-static model gives the uphill offset of the center of mass (CoM) from it,</p>
+            <p>$$x_c = \frac{m}{M}\, h_p \left(\tan\alpha + \mu\right) + z_c \tan\alpha.$$</p>
+            <p>It grows with both the box mass \(m\) and the ramp inclination \(\alpha\). The torso pitch prior therefore pitches the reference torso forward by</p>
+            <p>$$\phi(m, \alpha) = \alpha \left[\lambda (m - m_0) + 1\right],$$</p>
+            <p>and the dead zone penalizes the foot position error \(\mathbf{e}_\mathrm{f}\) only beyond the band \(\boldsymbol{\delta}_\mathrm{f}\),</p>
+            <p>$$c_\mathrm{foot} = w_\mathrm{f} \left\| \max\left(|\mathbf{e}_\mathrm{f}| - \boldsymbol{\delta}_\mathrm{f}, \mathbf{0}\right) \right\|^2.$$</p>
+            <p class="aug-symbols">\(M\): robot mass, \(\mu\): box friction, \(h_p\), \(z_c\): heights of the hands and the CoM, \(m_0\): nominal box mass, \(\lambda\): mass coefficient.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns is-vcentered aug-layout">
+      <div class="column is-7">
+        <div class="aug-figure-wrap">
+          <svg class="aug-figure" id="aug-svg" viewBox="0 0 1200 860" role="img"
+               aria-label="The augmented reference pushing a box up a ramp over the nominal reference. Its torso pitches further forward and its feet step back as the ramp gets steeper and the box gets heavier."></svg>
+          <div class="aug-hint" id="aug-hint" hidden></div>
+        </div>
+      </div>
+      <div class="column is-5">
+        <div class="explorer-control">
+          <label for="aug-slope">Ramp inclination <span class="value" id="aug-slope-value">9&deg;</span></label>
+          <input type="range" id="aug-slope" min="0" max="15" step="3" value="9" autocomplete="off">
+          <div class="explorer-ticks"><span>0</span><span>3</span><span>6</span><span>9</span><span>12</span><span>15</span></div>
+        </div>
+        <div class="explorer-control">
+          <label for="aug-mass">Box mass <span class="value" id="aug-mass-value">9 kg</span></label>
+          <input type="range" id="aug-mass" min="5" max="15" step="2" value="9" autocomplete="off">
+          <div class="explorer-ticks"><span>5</span><span>7</span><span>9</span><span>11</span><span>13</span><span>15</span></div>
+        </div>
+        <ul class="aug-legend">
+          <li><span class="aug-swatch is-nominal"></span>Nominal reference</li>
+          <li><span class="aug-swatch is-augmented"></span>Augmented reference</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Reference Distilled Motion Tracking</h2>
+    <div class="content has-text-justified">
+      <p>
+        One policy is trained on the whole dataset at once.
+        It observes only the nominal reference, which is the same for every box mass and ramp inclination, while its reward tracks the augmented reference of the environment it is pushing in.
+        Since the box mass and the ramp inclination are never observed, the policy learns to infer them from how the box responds to the push and to adapt its posture accordingly.
+      </p>
+    </div>
+    <div class="figure rdmt-scroll">
+      <!-- Drawn on a 1100 x 540 grid. Videos and SVG share it, so they scale together. -->
+      <div class="rdmt-figure" role="img"
+           aria-label="The policy observes the nominal reference and acts in parallel training environments, while the reward tracks augmented references over box mass and ramp inclination.">
+        <video class="rdmt-video" style="left: 5%; top: 13.0556%; width: 27.2727%; height: 31.2963%;"
+               src="./static/videos/rdmt/nominal.mp4" autoplay muted loop playsinline></video>
+        <video class="rdmt-video" style="left: 5%; top: 58.7037%; width: 27.2727%; height: 31.8519%;"
+               src="./static/videos/rdmt/bank.mp4" autoplay muted loop playsinline></video>
+        <video class="rdmt-video" style="left: 65.9091%; top: 25.9259%; width: 32.2727%; height: 53.7037%;"
+               src="./static/videos/rdmt/train.mp4" autoplay muted loop playsinline></video>
+        <svg class="rdmt-svg" viewBox="0 0 1100 540" aria-hidden="true">
+          <defs>
+            <marker id="rdmt-ah-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="16" markerHeight="16"
+                    markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5b8fd6"/></marker>
+            <marker id="rdmt-ah-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="16" markerHeight="16"
+                    markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f0a46c"/></marker>
+            <marker id="rdmt-ah-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="16" markerHeight="16"
+                    markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker>
+            <marker id="rdmt-ah-yellow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="14" markerHeight="14"
+                    markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e8b400"/></marker>
+            <linearGradient id="rdmt-net-fill" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#f3f7fe"/>
+              <stop offset="1" stop-color="#d9e7fb"/>
+            </linearGradient>
+            <filter id="rdmt-shadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#5b8fd6" flood-opacity="0.3"/>
+            </filter>
+          </defs>
+
+          <!-- Panel frames -->
+          <rect class="rdmt-frame" x="50" y="65.5" width="310" height="179" rx="8"/>
+          <rect class="rdmt-frame" x="50" y="312" width="310" height="182" rx="8"/>
+          <rect class="rdmt-frame" x="720" y="135" width="365" height="300" rx="8"/>
+
+          <!-- Titles -->
+          <text class="rdmt-title" x="205" y="55">Nominal reference</text>
+          <text class="rdmt-title" x="205" y="301">Augmented references</text>
+          <text class="rdmt-title" x="555" y="74">Policy</text>
+          <text class="rdmt-title" x="902.5" y="124">Training environments</text>
+
+          <!-- Augmented reference axes -->
+          <path class="rdmt-axis" d="M55,509 H350" marker-end="url(#rdmt-ah-yellow)"/>
+          <text class="rdmt-axis-label" x="205" y="534">mass</text>
+          <path class="rdmt-axis" d="M37,489 V322" marker-end="url(#rdmt-ah-yellow)"/>
+          <text class="rdmt-axis-label" transform="translate(21 403.5) rotate(-90)">slope</text>
+
+          <!-- Policy network: inputs in blue, outputs in orange, like the arrows that meet them -->
+          <path class="rdmt-net" filter="url(#rdmt-shadow)"
+                d="M495,95 Q495,85 505,87.25 L605,109.75 Q615,112 615,122 L615,188 Q615,198 605,200.25 L505,222.75 Q495,225 495,215 Z"/>
+          <g class="rdmt-edges">
+            <path d="M520,113 L555,127 M520,113 L555,155 M520,113 L555,183 M520,141 L555,127 M520,141 L555,155 M520,141 L555,183
+                     M520,169 L555,127 M520,169 L555,155 M520,169 L555,183 M520,197 L555,127 M520,197 L555,155 M520,197 L555,183
+                     M555,127 L591,141 M555,127 L591,169 M555,155 L591,141 M555,155 L591,169 M555,183 L591,141 M555,183 L591,169"/>
+          </g>
+          <g class="rdmt-node-in">
+            <circle cx="520" cy="113" r="8"/><circle cx="520" cy="141" r="8"/><circle cx="520" cy="169" r="8"/><circle cx="520" cy="197" r="8"/>
+          </g>
+          <g class="rdmt-node-hidden">
+            <circle cx="555" cy="127" r="8"/><circle cx="555" cy="155" r="8"/><circle cx="555" cy="183" r="8"/>
+          </g>
+          <g class="rdmt-node-out">
+            <circle cx="591" cy="141" r="8"/><circle cx="591" cy="169" r="8"/>
+          </g>
+
+          <!-- Data flow: into the policy from the left, out of it on the right -->
+          <path class="rdmt-arrow blue" d="M366,130 H486" marker-end="url(#rdmt-ah-blue)"/>
+          <text class="rdmt-label" x="426" y="117">Observation</text>
+          <path class="rdmt-arrow orange" d="M624,155 H713" marker-end="url(#rdmt-ah-orange)"/>
+          <text class="rdmt-label" x="668" y="142">Action</text>
+          <path class="rdmt-arrow blue" d="M713,285 H438 Q420,285 420,267 V203 Q420,185 438,185 H486"
+                marker-end="url(#rdmt-ah-blue)"/>
+          <text class="rdmt-label" x="555" y="272">State</text>
+          <path class="rdmt-arrow gray" d="M366,405 H713" marker-end="url(#rdmt-ah-gray)"/>
+          <text class="rdmt-label" x="555" y="392">Reward</text>
+
+          <!-- What each channel carries -->
+          <g class="rdmt-chip blue" transform="translate(375.4 142.0)"><rect width="101.3" height="26" rx="13.0"/><text x="50.6" y="18.1" style="font-size:15px">joints + torso</text></g>
+          <g class="rdmt-chip blue" transform="translate(432.8 297.0)"><rect width="110.3" height="26" rx="13.0"/><text x="55.2" y="18.1" style="font-size:15px">proprioception</text></g>
+          <g class="rdmt-chip blue" transform="translate(553.1 297.0)"><rect width="124.1" height="26" rx="13.0"/><text x="62.0" y="18.1" style="font-size:15px">box pose &amp; twist</text></g>
+          <g class="rdmt-chip orange" transform="translate(632.9 167.0)"><rect width="70.3" height="22" rx="11.0"/><text x="35.1" y="15.4" style="font-size:13px">PD targets</text></g>
+          <g class="rdmt-chip gray" transform="translate(448.9 417.0)"><rect width="104.9" height="26" rx="13.0"/><text x="52.4" y="18.1" style="font-size:15px">body tracking</text></g>
+          <g class="rdmt-chip gray" transform="translate(563.8 417.0)"><rect width="97.4" height="26" rx="13.0"/><text x="48.7" y="18.1" style="font-size:15px">box tracking</text></g>
+          <g class="rdmt-chip gray" transform="translate(502.4 451.0)"><rect width="105.3" height="26" rx="13.0"/><text x="52.6" y="18.1" style="font-size:15px">regularization</text></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">On the Real Robot</h2>
+    <div class="columns is-vcentered">
+      <div class="column is-6">
+        <div class="figure">
+          <img class="is-rounded" src="./static/images/flat-hand.jpg" alt="Flat hands with passively damped hinges">
+          <p class="figure-caption">(a) Flat hands, and the hinge at its (b) upper and (c) lower limits.</p>
+        </div>
+      </div>
+      <div class="column is-6">
+        <div class="content has-text-justified">
+          <p>
+            The hands of the physical Unitree G1 are replaced by flat plates with passively damped hinges, which keep face contact with the box as the torso leans.
+            The policy transfers to the real robot and pushes a 6 kg, 1 m tall box.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="clip-section pitch-comparison" id="torso-pitch" aria-labelledby="torso-pitch-title">
+    <h3 class="title is-4 has-text-centered" id="torso-pitch-title">Torso Pitch Adaptation</h3>
+    <p class="pitch-legend">
+      <span class="pitch-axis">Average lean</span>
+      <span class="pitch-normal">Perpendicular to ramp</span>
+    </p>
+    <div class="clip-grid">
+      <article aria-labelledby="pitch-light-title">
+        <h4 class="clip-title" id="pitch-light-title">10 kg Box at 10.2°</h4>
+        <video class="pitch-video" autoplay muted loop playsinline preload="metadata" width="960" height="720"
+               src="./static/videos/torso-pitch/10kg.mp4" poster="./static/videos/torso-pitch/10kg.jpg"
+               aria-labelledby="pitch-light-title"></video>
+      </article>
+      <article aria-labelledby="pitch-heavy-title">
+        <h4 class="clip-title" id="pitch-heavy-title">19 kg Box at 10.2°</h4>
+        <video class="pitch-video" autoplay muted loop playsinline preload="metadata" width="960" height="720"
+               src="./static/videos/torso-pitch/19kg.mp4" poster="./static/videos/torso-pitch/19kg.jpg"
+               aria-labelledby="pitch-heavy-title"></video>
+      </article>
+    </div>
+  </section>
+
+  <section class="single-push ramp-comparison" id="ramp-comparison" aria-labelledby="single-push" hidden>
+    <h3 class="title is-4 has-text-centered" id="single-push">Single Push Across Ramp Angles</h3>
+    <div class="ramp-angles" role="group" aria-label="Ramp angle">
+      <button class="button is-small" type="button" data-angle="0" aria-pressed="true">0&deg;</button>
+      <button class="button is-small" type="button" data-angle="5" aria-pressed="false">5&deg;</button>
+      <button class="button is-small" type="button" data-angle="10" aria-pressed="false">10&deg;</button>
+      <button class="button is-small" type="button" data-angle="12" aria-pressed="false">12&deg;</button>
+    </div>
+    <div class="ramp-views">
+      <div>
+        <h4 class="clip-title">Camera 1</h4>
+        <div class="ramp-stage"></div>
+      </div>
+      <div>
+        <h4 class="clip-title">Camera 2</h4>
+        <div class="ramp-stage"></div>
+      </div>
+    </div>
+    <p class="ramp-compare-status" role="status"></p>
+  </section>
+
+  <section class="clip-section" id="continuous-push" aria-labelledby="continuous-push-title">
+    <h3 class="title is-4 has-text-centered" id="continuous-push-title">Continuous Push</h3>
+    <div class="clip-grid">
+      <article aria-labelledby="continuous-mass-5deg-title">
+        <h4 class="clip-title" id="continuous-mass-5deg-title">Changing Box Mass from 10 kg to 19 kg at 5.6°</h4>
+        <!-- Box mass changes when a weight is set on the box. Ramp angles are inclinometer readings. -->
+        <div class="push-player" data-mass="0 10, 16.5 15, 30.5 19" data-ramp="5.6">
+          <video autoplay muted loop playsinline preload="metadata" width="960" height="720"
+                 src="./static/videos/continuous-push/mass-5deg.mp4" poster="./static/videos/continuous-push/mass-5deg.jpg"
+                 aria-labelledby="continuous-mass-5deg-title"></video>
+        </div>
+      </article>
+      <article aria-labelledby="continuous-mass-10deg-title">
+        <h4 class="clip-title" id="continuous-mass-10deg-title">Changing Box Mass from 10 kg to 19 kg at 10.2°</h4>
+        <div class="push-player" data-mass="0 10, 15 15, 28.5 19" data-ramp="10.2">
+          <video autoplay muted loop playsinline preload="metadata" width="960" height="720"
+                 src="./static/videos/continuous-push/mass-10deg.mp4" poster="./static/videos/continuous-push/mass-10deg.jpg"
+                 aria-labelledby="continuous-mass-10deg-title"></video>
+        </div>
+      </article>
+      <article aria-labelledby="continuous-ramp-title">
+        <h4 class="clip-title" id="continuous-ramp-title">Changing Ramp Angle from 0° to 12.6°</h4>
+        <!-- The ramp tilts at a steady rate up to the inclinometer reading at the top. -->
+        <div class="push-player" data-mass="10" data-ramp="0 0, 7.2 0, 52.7 12.6">
+          <video autoplay muted loop playsinline preload="metadata" width="960" height="720"
+                 src="./static/videos/continuous-push/ramp-0-to-12deg.mp4" poster="./static/videos/continuous-push/ramp-0-to-12deg.jpg"
+                 aria-labelledby="continuous-ramp-title"></video>
+        </div>
+      </article>
+      <article aria-labelledby="continuous-lateral-title">
+        <h4 class="clip-title" id="continuous-lateral-title">Pushing Under Lateral Disturbance</h4>
+        <div class="push-player" data-mass="10" data-ramp="0.2">
+          <video autoplay muted loop playsinline preload="metadata" width="960" height="720"
+                 src="./static/videos/continuous-push/lateral-push.mp4" poster="./static/videos/continuous-push/lateral-push.jpg"
+                 aria-labelledby="continuous-lateral-title"></video>
+        </div>
+      </article>
+    </div>
+  </section>
+
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{zhuang2026pushmimic,
+  author  = {Yulun Zhuang and Hanyu Zhang and Jingyu Liu and Yanran Ding},
+  title   = {PushMimic: Learning Adaptive Humanoid Box Pushing via Dynamic Motion Augmentation and Reference Distillation},
+  journal = {arXiv preprint arXiv:TODO},
+  year    = {2026},
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content has-text-centered">
+          <p>
+            This website is inspired by <a href="https://nerfies.github.io" target="_blank" rel="noopener noreferrer">Nerfies</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
