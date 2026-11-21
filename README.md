@@ -6,7 +6,7 @@
 
 University of Michigan
 
-[Project Page](https://arcad-lab-um.github.io/pushmimic/) | [Video](https://youtu.be/pdW_6NgSCAU) | Paper (coming soon)
+[Project Page](https://arcad-lab-um.github.io/pushmimic/) | [Video](https://youtu.be/ap9OXna8eHo) | Paper (coming soon)
 
 ![PushMimic overview](media/teaser.jpg)
 
